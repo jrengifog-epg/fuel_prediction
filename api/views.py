@@ -36,13 +36,13 @@ def predict_fuel_trainer(request):
         # Devolver la respuesta JSON
         return Response(response)
 
-@api_view(["POST"])
+@api_view(["GET"])
 def predict_fuel_consumption(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         # # Obtener los datos de prueba desde la solicitud JSON
-        dias = request.data.get('dias')
-        peso = request.data.get('peso')
-        potencia = request.data.get('potencia')
+        dias = request.GET.get('dias')
+        peso = request.GET.get('peso')
+        potencia = request.GET.get('potencia')
         
         # Obtener las características de prueba
 
