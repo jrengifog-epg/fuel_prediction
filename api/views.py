@@ -3,12 +3,13 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+import os
 
 @api_view(["GET"])
 def predict_fuel_trainer(request):
     if request.method == 'GET':
         #Leer el archivo CSV
-        data = pd.read_csv('/home/armandolopezt85/fuel_prediction/api/media/fuel_consumption.csv')
+        data = pd.read_csv(os.path.join(os.path.dirname(__file__), 'media', 'fuel_consumption.csv'))
 
         #Convertir la columna fechas de csv a tipo datetime
         data['Fecha'] = pd.to_datetime(data['Fecha'])
@@ -50,8 +51,8 @@ def predict_fuel_consumption(request):
         
         # Realizar predicciones utilizando el modelo entrenado desde el archivo
         model = LinearRegression()
-        model.coef_ = np.load('api/media/model.npy')
-        model.intercept_ = np.load('api/media/intercept.npy')
+        model.coef_ = np.load(os.path.join(os.path.dirname(__file__), 'media','model.npy'))
+        model.intercept_ = np.load(os.path.join(os.path.dirname(__file__), 'media', 'intercept.npy'))
         predictions = model.predict(X_test)
         
         #Crear una respuesta JSON con las predicciones multiplicado por dias
