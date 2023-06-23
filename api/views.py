@@ -8,7 +8,7 @@ from rest_framework.response import Response
 def predict_fuel_trainer(request):
     if request.method == 'GET':
         #Leer el archivo CSV
-        data = pd.read_csv('fuel_prediction/api/media/fuel_consumption.csv')
+        data = pd.read_csv('/home/armandolopezt85/fuel_prediction/api/media/fuel_consumption.csv')
 
         #Convertir la columna fechas de csv a tipo datetime
         data['Fecha'] = pd.to_datetime(data['Fecha'])
