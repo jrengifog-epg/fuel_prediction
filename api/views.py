@@ -43,7 +43,7 @@ def predict_fuel_consumption(request):
         dias = request.GET.get('dias')
         peso = request.GET.get('peso')
         potencia = request.GET.get('potencia')
-        
+        dias = int(dias)
         # Obtener las características de prueba
 
         X_test = np.array([[dias,peso,potencia]])
