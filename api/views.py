@@ -40,11 +40,10 @@ def predict_fuel_trainer(request):
 def predict_fuel_consumption(request):
     if request.method == 'GET':
         # # Obtener los datos de prueba desde la solicitud JSON
-        dias = request.GET.get('dias')
-        peso = request.GET.get('peso')
-        potencia = request.GET.get('potencia')
+        dias = int(request.GET.get('dias'))
+        peso = float(request.GET.get('peso'))
+        potencia = float(request.GET.get('potencia'))
         # Obtener las características de prueba
-
         X_test = np.array([[dias,peso,potencia]])
         
         # Realizar predicciones utilizando el modelo entrenado desde el archivo
@@ -57,7 +56,7 @@ def predict_fuel_consumption(request):
         prediction = float(predictions[0]) * int(dias)
         prediction = round(prediction, 2)
         response = {'predictions': 'El consumo de combustible es de: ' + str(prediction) + ' Galones en '+ str(dias) + ' dias'}
-
+       
         
         # Devolver la respuesta JSON
         return Response(response)
