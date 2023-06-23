@@ -8,9 +8,8 @@ import os
 @api_view(["GET"])
 def predict_fuel_trainer(request):
     if request.method == 'GET':
-        #Leer el archivo CSV
+        #Leer el archivo CSV media/fuel_consumption.csv
         data = pd.read_csv(os.path.join(os.path.dirname(__file__), 'media', 'fuel_consumption.csv'))
-
         #Convertir la columna fechas de csv a tipo datetime
         data['Fecha'] = pd.to_datetime(data['Fecha'])
 
@@ -28,8 +27,8 @@ def predict_fuel_trainer(request):
         model.fit(X, y)
 
         # Guardar el modelo entrenado en un archivo
-        np.save('api/media/model.npy', model.coef_)
-        np.save('api/media/intercept.npy', model.intercept_)
+        np.save(os.path.join(os.path.dirname(__file__), 'media','model.npy'), model.coef_)
+        np.save(os.path.join(os.path.dirname(__file__), 'media', 'intercept.npy'), model.intercept_)
 
         # Crear una respuesta JSON con el modelo entrenado
         response = {'message': 'Modelo entrenado y guardado en el servidor'}
