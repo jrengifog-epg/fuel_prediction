@@ -139,3 +139,6 @@ GitHub.sublime-settings
 
 #ignorar migrations
 */migrations/*
+
+#ignorar archivos .npy
+*.npy
