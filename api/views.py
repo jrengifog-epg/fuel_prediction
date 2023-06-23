@@ -54,7 +54,7 @@ def predict_fuel_consumption(request):
         predictions = model.predict(X_test)
         
         #Crear una respuesta JSON con las predicciones multiplicado por dias
-        prediction = predictions.data[0] * int(dias)
+        prediction = float(predictions[0]) * int(dias)
         prediction = round(prediction, 2)
         response = {'predictions': 'El consumo de combustible es de: ' + str(prediction) + ' Galones en '+ str(dias) + ' dias'}
 
