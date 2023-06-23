@@ -43,7 +43,6 @@ def predict_fuel_consumption(request):
         dias = request.GET.get('dias')
         peso = request.GET.get('peso')
         potencia = request.GET.get('potencia')
-        dias = int(dias)
         # Obtener las características de prueba
 
         X_test = np.array([[dias,peso,potencia]])
@@ -55,7 +54,7 @@ def predict_fuel_consumption(request):
         predictions = model.predict(X_test)
         
         #Crear una respuesta JSON con las predicciones multiplicado por dias
-        prediction = predictions[0] * float(dias)
+        prediction = predictions[0] * int(dias)
         prediction = round(prediction, 2)
         response = {'predictions': 'El consumo de combustible es de: ' + str(prediction) + ' Galones en '+ str(dias) + ' dias'}
 
