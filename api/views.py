@@ -1,0 +1,64 @@
+import numpy as np
+import pandas as pd
+from sklearn.linear_model import LinearRegression
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+@api_view(["GET"])
+def predict_fuel_trainer(request):
+    if request.method == 'GET':
+        #Leer el archivo CSV
+        data = pd.read_csv('api/media/fuel_consumption.csv')
+
+        #Convertir la columna fechas de csv a tipo datetime
+        data['Fecha'] = pd.to_datetime(data['Fecha'])
+
+        #Obtener el número de días transcurridos desde la fecha inicial
+        data['Dias'] = (data['Fecha'] - data['Fecha'].min()).dt.days
+
+        # Obtener las características (X) y el consumo de combustible (y)
+        X = data[['Dias', 'Peso', 'Potencia']].values
+        y = data['Consumo'].values
+
+        # Crear un modelo de regresión lineal
+        model = LinearRegression()
+
+        # Entrenar el modelo con los datos de entrenamiento
+        model.fit(X, y)
+
+        # Guardar el modelo entrenado en un archivo
+        np.save('api/media/model.npy', model.coef_)
+        np.save('api/media/intercept.npy', model.intercept_)
+
+        # Crear una respuesta JSON con el modelo entrenado
+        response = {'message': 'Modelo entrenado y guardado en el servidor'}
+
+        # Devolver la respuesta JSON
+        return Response(response)
+
+@api_view(["POST"])
+def predict_fuel_consumption(request):
+    if request.method == 'POST':
+        # # Obtener los datos de prueba desde la solicitud JSON
+        dias = request.data.get('dias')
+        peso = request.data.get('peso')
+        potencia = request.data.get('potencia')
+        
+        # Obtener las características de prueba
+
+        X_test = np.array([[dias,peso,potencia]])
+        
+        # Realizar predicciones utilizando el modelo entrenado desde el archivo
+        model = LinearRegression()
+        model.coef_ = np.load('api/media/model.npy')
+        model.intercept_ = np.load('api/media/intercept.npy')
+        predictions = model.predict(X_test)
+        
+        #Crear una respuesta JSON con las predicciones multiplicado por dias
+        prediction = predictions[0] * float(dias)
+        prediction = round(prediction, 2)
+        response = {'predictions': 'El consumo de combustible es de: ' + str(prediction) + ' Galones en '+ str(dias) + ' dias'}
+
+        
+        # Devolver la respuesta JSON
+        return Response(response)
